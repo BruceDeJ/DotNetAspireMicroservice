@@ -1,0 +1,69 @@
+﻿@page "/Registration"
+@using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
+@inject AuthApiClient AuthAPI
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Registration</PageTitle>
+
+<div style="margin: auto; width: 50%;">
+    <h1>Register New User</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <EditForm Model=@registrationForm OnValidSubmit="FormSubmitted">
+                <DataAnnotationsValidator />
+                <div class="row mb-3">
+                    <div class="form-group">
+                        <label class="mb-3" for="Email">Email</label>
+                        <InputText @bind-Value=registrationForm.Email class="form-control" id="Email" />
+                        <ValidationMessage For="() => registrationForm.Email" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="mb-3" for="Password">Password</label>
+                        <InputText type="password" @bind-Value=registrationForm.Password class="form-control" id="Password" />
+                        <ValidationMessage For="() => registrationForm.Password" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <input type="submit" value="Submit" class="btn btn-primary mt-3" style="width: 50%;"/>
+                    </div>
+                </div>
+
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    //https://learn.microsoft.com/en-us/aspnet/core/blazor/state-management?view=aspnetcore-9.0&pivots=server#handle-prerendering
+
+    private RegistrationForm registrationForm = new RegistrationForm();
+
+
+    async Task FormSubmitted()
+    {
+        var successful = await AuthAPI.Register(registrationForm.Email, registrationForm.Password);
+
+        if (successful)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    public class RegistrationForm
+    {
+        [Required]
+        public string Email { get; set; }
+        
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+    }
+}

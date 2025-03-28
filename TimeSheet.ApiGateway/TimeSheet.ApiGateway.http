@@ -1,0 +1,6 @@
+@TimeSheet.ApiGateway_HostAddress = http://localhost:5130
+
+GET {{TimeSheet.ApiGateway_HostAddress}}/
+Accept: application/json
+
+###

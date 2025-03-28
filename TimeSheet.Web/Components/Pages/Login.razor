@@ -1,0 +1,74 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
+@inject AuthApiClient AuthAPI
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+@inject IJSRuntime JS
+
+<PageTitle>Login</PageTitle>
+<div style ="margin: auto; width: 50%;">
+    <h1>Login to your account</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <EditForm Model=@loginForm OnValidSubmit="FormSubmitted">
+                <DataAnnotationsValidator />
+                <div class="row mb-3">
+                    <div class="form-group">
+                        <label class="mb-3" for="Email">Email</label>
+                        <InputText @bind-Value=loginForm.Email class="form-control" id="Email" />
+                        <ValidationMessage For="() => loginForm.Email" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="mb-3" for="Password">Password</label>
+                        <InputText type="password" @bind-Value=loginForm.Password class="form-control" id="Password" />
+                        <ValidationMessage For="() => loginForm.Password" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <input type="submit" value="Submit" class="btn btn-primary mt-3" style="width: 50%;" />
+                    </div>
+                </div>
+
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    //https://learn.microsoft.com/en-us/aspnet/core/blazor/state-management?view=aspnetcore-9.0&pivots=server#handle-prerendering
+
+    private LoginForm loginForm = new LoginForm();
+
+
+    async Task FormSubmitted()
+    {
+        var (jwt, successful) = await AuthAPI.Login(loginForm.Email, loginForm.Password);
+
+        if (successful)
+        {
+            await ProtectedSessionStore.SetAsync("authJWTToken", jwt);
+
+            NavigationManager.NavigateTo("/Home");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Credentials invalid");
+        }
+    }
+
+    public class LoginForm
+    {
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+    }
+}
