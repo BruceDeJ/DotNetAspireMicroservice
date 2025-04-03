@@ -25,9 +25,9 @@ builder.AddServiceDefaults();
 
 if (builder.Environment.IsDevelopment())
 {
-    jwtIssuer = builder.Configuration.GetSection("jwtConfig:issuer").Get<string>();
-    jwtAudience = builder.Configuration.GetSection("jwtConfig:audience").Get<string>();
-    jwtKey = builder.Configuration.GetSection("jwtConfig:secret").Get<string>();
+    jwtIssuer = builder?.Configuration?.GetSection("jwtConfig:issuer")?.Get<string>() ?? string.Empty;
+    jwtAudience = builder?.Configuration?.GetSection("jwtConfig:audience")?.Get<string>() ?? string.Empty;
+    jwtKey = builder?.Configuration?.GetSection("jwtConfig:secret")?.Get<string>() ?? string.Empty;
 }
 
 // Add services to the container.
@@ -55,8 +55,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
-
-app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -134,6 +132,7 @@ app.MapGet("/Logout", async (HttpRequest request, IdentityContext identityContex
 
 app.UseAuthentication();
 
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

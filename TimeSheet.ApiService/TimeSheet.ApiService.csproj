@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthAPI\TimeSheet.AuthAPI.csproj" />
     <ProjectReference Include="..\TimeSheet.ServiceDefaults\TimeSheet.ServiceDefaults.csproj" />
   </ItemGroup>
 
@@ -19,6 +18,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
   </ItemGroup>
 
 </Project>

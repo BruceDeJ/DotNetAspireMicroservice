@@ -15,9 +15,9 @@ builder.AddServiceDefaults();
 
 if (builder.Environment.IsDevelopment())
 {
-    jwtIssuer = builder.Configuration.GetSection("jwtConfig:issuer").Get<string>();
-    jwtAudience = builder.Configuration.GetSection("jwtConfig:audience").Get<string>();
-    jwtKey = builder.Configuration.GetSection("jwtConfig:secret").Get<string>();
+    jwtIssuer = builder?.Configuration?.GetSection("jwtConfig:issuer")?.Get<string>() ?? string.Empty;
+    jwtAudience = builder?.Configuration?.GetSection("jwtConfig:audience")?.Get<string>() ?? string.Empty;
+    jwtKey = builder?.Configuration?.GetSection("jwtConfig:secret")?.Get<string>() ?? string.Empty;
 }
 
 
